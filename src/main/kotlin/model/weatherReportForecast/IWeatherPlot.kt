@@ -1,4 +1,4 @@
-package weatherReport
+package model.weatherReportForecast
 
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 

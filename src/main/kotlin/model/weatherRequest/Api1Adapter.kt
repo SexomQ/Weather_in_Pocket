@@ -1,7 +1,5 @@
-package weatherReport
+package model.weatherRequest
 
-import io.ktor.client.*
-import io.ktor.client.request.*
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
@@ -9,7 +7,8 @@ import kotlinx.serialization.json.Json
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 
-class WeatherProvider: IWeatherProvider {
+class Api1Adapter(private val api1Caller: IApi1Caller): IApi1Adapter, IApiStrategy {
+    var apiResponse = ""
 
     @Serializable
     data class HourlyData(
@@ -22,8 +21,15 @@ class WeatherProvider: IWeatherProvider {
     @Serializable
     data class WeatherData(val hourly: HourlyData)
 
+    override suspend fun getData(refresh:Boolean): String {
+        if ((refresh) or (apiResponse == "")) {
+            apiResponse = api1Caller.apiCall()
+        }
+        return apiResponse
+    }
+
     override suspend fun transformData(): AnyFrame {
-        val jsonString = apiCall()
+        val jsonString = getData(true)
         val weatherData: WeatherData = Json { ignoreUnknownKeys = true }.decodeFromString(jsonString)
 
         val time = weatherData.hourly.time
@@ -40,12 +46,4 @@ class WeatherProvider: IWeatherProvider {
 
         return df
     }
-
-    override suspend fun apiCall(): String {
-        val client = HttpClient()
-        val data = client.get<String>("https://api.open-meteo.com/v1/forecast?latitude=47.0251&longitude=28.7975&hourly=temperature_2m,relativehumidity_2m,precipitation&timezone=Europe%2FBerlin&models=best_match")
-
-        return data
-    }
-
 }

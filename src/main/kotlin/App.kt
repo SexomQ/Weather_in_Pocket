@@ -1,10 +1,13 @@
-import AppLogic.AppLogic
-import ui.UI
-import weatherReport.WeatherProvider
-import weatherReport.WeatherService
+import controller.AppController
+import model.AppModel
+import view.AppView
 
-class App {
-    suspend fun run(){
-        AppLogic(UI(), WeatherService(WeatherProvider())).collectData()
+// This is a singleton pattern
+object App {
+    val model = AppModel()
+    val view = AppView()
+    val controller = AppController(model, view)
+    suspend fun run() {
+        controller.control()
     }
 }
