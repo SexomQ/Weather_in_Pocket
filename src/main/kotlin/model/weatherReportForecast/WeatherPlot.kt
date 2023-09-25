@@ -8,7 +8,6 @@ import org.jetbrains.letsPlot.letsPlot
 
 class WeatherPlot: IPlotHumidity, IPlotTemperature, IPlotPrecipitation, IWeatherPlot {
     override fun plotTemperature(dataFrame: AnyFrame) {
-        println("Plotting data frame")
         val plot = letsPlot(dataFrame.toMap()) { x = "time"; y = "temperature" } +
                 geomLine() +
                 ggsize(500, 500)
@@ -17,7 +16,6 @@ class WeatherPlot: IPlotHumidity, IPlotTemperature, IPlotPrecipitation, IWeather
     }
 
     override fun plotHumidity(dataFrame: AnyFrame) {
-        println("Plotting data frame")
         val plot = letsPlot(dataFrame.toMap()) { x = "time"; y = "humidity" } +
                 geomLine() +
                 ggsize(500, 500)
@@ -26,7 +24,6 @@ class WeatherPlot: IPlotHumidity, IPlotTemperature, IPlotPrecipitation, IWeather
     }
 
     override fun plotPrecipitation(dataFrame: AnyFrame) {
-        println("Plotting data frame")
         val plot = letsPlot(dataFrame.toMap()) { x = "time"; y = "precipitation" } +
                 geomLine() +
                 ggsize(500, 500)
@@ -35,6 +32,7 @@ class WeatherPlot: IPlotHumidity, IPlotTemperature, IPlotPrecipitation, IWeather
     }
 
     override fun plot(dataFrame: AnyFrame) {
+        println("Wait for the plots to load")
         plotTemperature(dataFrame)
         plotHumidity(dataFrame)
         plotPrecipitation(dataFrame)

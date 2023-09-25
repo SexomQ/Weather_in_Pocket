@@ -9,26 +9,21 @@ class HourlyWeatherService {
         val humid = HourlyWeatherFactory.createHourlyElement("humidity")
         val prec = HourlyWeatherFactory.createHourlyElement("precipitation")
 
-        fun getTemperature(data: AnyFrame): String {
-            return temp.getLastData(data)
-        }
+        val composite = CompositeWeatherElement(listOf(temp, humid, prec))
 
-        fun getHumidity(data: AnyFrame): String {
-            return humid.getLastData(data)
-        }
-
-        fun getPrecipitation(data: AnyFrame): String {
-            return prec.getLastData(data)
+        fun getCompositeData(data: AnyFrame): List<String> {
+            return composite.getLastData(data).split(", ")
         }
     }
 
     fun getWeatherLastHour(data: AnyFrame): WeatherLastHourBuilder {
         val facade = Facade()
+        val compositeData = facade.getCompositeData(data)
 
         return WeatherLastHourBuilder.Builder()
-            .setTemperature(temp = facade.getTemperature(data))
-            .setHumidity(humid = facade.getHumidity(data))
-            .setPrecipitation(prec = facade.getPrecipitation(data))
+            .setTemperature(temp = compositeData[0])
+            .setHumidity(humid = compositeData[1])
+            .setPrecipitation(prec = compositeData[2])
             .build()
     }
 }

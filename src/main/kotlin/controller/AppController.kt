@@ -84,7 +84,7 @@ class AppController(val model: AppModel, val view: AppView) {
         else if (weather_choice == "2") {
             // implement weather now here later
             // --------------------------------
-            println(model.getWeatherReportLastHour())
+//            println(model.getWeatherReportLastHour())
             val values = model.getWeatherReportLastHour()
             val temp = values.temp
             val humid = values.humid
