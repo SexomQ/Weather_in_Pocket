@@ -5,7 +5,7 @@ import model.weatherRequest.Api1Caller
 import model.weatherRequest.WeatherDataPrototype
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 
-class RefreshManager {
+class RefreshManager: IRefreshManager {
     private val observers = mutableListOf<IWeatherObserver>()
     var df: AnyFrame = AnyFrame.empty()
         set(value) {
@@ -13,11 +13,11 @@ class RefreshManager {
             notifyObservers()
         }
 
-    fun addObserver(observer: IWeatherObserver) {
+    override fun addObserver(observer: IWeatherObserver) {
         observers.add(observer)
     }
 
-    fun removeObserver(observer: IWeatherObserver) {
+    override fun removeObserver(observer: IWeatherObserver) {
         observers.remove(observer)
     }
 
@@ -25,7 +25,7 @@ class RefreshManager {
         observers.forEach { it.update(df) }
     }
 
-    suspend fun fetchData(){
+    override suspend fun fetchData(){
         val request = WeatherDataPrototype(Api1Adapter(Api1Caller()), AnyFrame.empty())
         df = request.clone().transformData()
     }

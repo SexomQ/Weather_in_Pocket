@@ -1,16 +1,21 @@
 package controller
 
 import model.AppModel
-import model.refreshManager.RefreshManager
 import model.userValidation.User
 import view.AppView
 
 class AppController(val model: AppModel, val view: AppView) {
-    var refresher = RefreshManager()
 
     suspend fun control() {
-        refresher.addObserver(model)
-        refresher.fetchData()
+        println("Welcome to the Weather In The Pocket App!")
+        println("Best weather app in the world!")
+        println("Prepare for the best weather experience in a terminal!")
+        println()
+        println()
+        println("----------------------------")
+        println("The app is loading...")
+        println("----------------------------")
+        model.initializeWeatherData()
         initial_choice()
     }
 
@@ -60,7 +65,7 @@ class AppController(val model: AppModel, val view: AppView) {
             // --------------------------------
             weather_choice()
         } else if (main_choice == "2") {
-            refresher.fetchData()
+            model.refreshWeatherData()
             weather_choice()
         }
         else if (main_choice == "3") {
@@ -86,10 +91,7 @@ class AppController(val model: AppModel, val view: AppView) {
             // --------------------------------
 //            println(model.getWeatherReportLastHour())
             val values = model.getWeatherReportLastHour()
-            val temp = values.temp
-            val humid = values.humid
-            val prec = values.prec
-            view.showWeatherNow(humid = humid, prec = prec, temp = temp)
+            view.showWeatherNow(humid = values.humid, prec = values.prec, temp = values.temp)
             weather_choice()
         }
         else if (weather_choice == "0") {
