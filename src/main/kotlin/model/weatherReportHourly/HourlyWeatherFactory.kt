@@ -1,7 +1,7 @@
 package model.weatherReportHourly
 
-object HourlyWeatherFactory {
-    fun createHourlyElement(type: String): IHourlyWeather {
+object HourlyWeatherFactory: IHourlyWeatherFactory {
+    override fun createHourlyElement(type: String): IHourlyWeather {
         return when (type) {
             "temperature" -> HourlyTemperature()
             "precipitation" -> HourlyPrecipitation()

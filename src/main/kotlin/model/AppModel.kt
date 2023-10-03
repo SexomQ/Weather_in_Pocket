@@ -8,8 +8,7 @@ import model.userValidation.User
 import model.userValidation.ValidationChain
 import model.weatherReportForecast.WeatherPlot
 import model.weatherReportForecast.WeatherPlotSimple
-import model.weatherReportHourly.HourlyWeatherService
-import model.weatherReportHourly.WeatherLastHourBuilder
+import model.weatherReportHourly.*
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 
 class AppModel(val refresher : IRefreshManager): IWeatherObserver {
@@ -17,7 +16,17 @@ class AppModel(val refresher : IRefreshManager): IWeatherObserver {
     var df = AnyFrame.empty()
 
     fun getWeatherReportLastHour(): WeatherLastHourBuilder {
-        return HourlyWeatherService().getWeatherLastHour(df)
+        val dataList = CompositeFacade(
+            HourlyWeatherFactory,
+            CompositeWeatherElement(listOf(
+                HourlyWeatherFactory.createHourlyElement("temperature"),
+                HourlyWeatherFactory.createHourlyElement("humidity"),
+                HourlyWeatherFactory.createHourlyElement("precipitation")
+                )),
+            HourlyWeatherFactory.createHourlyElement("temperature"),
+            HourlyWeatherFactory.createHourlyElement("humidity"),
+            HourlyWeatherFactory.createHourlyElement("precipitation"))
+        return HourlyWeatherService().getWeatherLastHour(dataList.getCompositeData(df))
     }
 
     fun plotForecast() {
@@ -49,6 +58,10 @@ class AppModel(val refresher : IRefreshManager): IWeatherObserver {
 
     override fun update(newDf: AnyFrame) {
         df = newDf
+    }
+
+    fun getWeatherData(): AnyFrame {
+        return df
     }
 
 }
